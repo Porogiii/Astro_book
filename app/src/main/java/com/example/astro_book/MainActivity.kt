@@ -3,6 +3,8 @@ package com.example.astro_book
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.astro_book.ui.theme.Astro_bookTheme
 import com.example.astro_book.ui.NewsScreen
 
@@ -14,5 +16,13 @@ class MainActivity : ComponentActivity() {
                 NewsScreen()
             }
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun MainActivityPreview() {
+    Astro_bookTheme {
+        NewsScreen()
     }
 }

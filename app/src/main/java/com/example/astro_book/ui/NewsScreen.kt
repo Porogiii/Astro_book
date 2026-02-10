@@ -15,7 +15,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.astro_book.opengl.OpenGLView
 import com.example.astro_book.ui.theme.*
 import com.example.astro_book.viewmodel.NewsViewModel
 
@@ -24,121 +26,131 @@ fun NewsScreen(viewModel: NewsViewModel = viewModel()) {
     val displayedNews by viewModel.displayedNews
     val newsLikes by viewModel.newsLikes
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(DarkNavy)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        // Новостная сетка (4 четверти)
+    Box(modifier = Modifier.fillMaxSize()) {
+        AndroidView(
+            factory = { context ->
+                OpenGLView(context)
+            },
+            modifier = Modifier.fillMaxSize()
+        )
+
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                if (displayedNews.size > 0) {
-                    NewsQuarter(
-                        news = displayedNews[0],
-                        likes = newsLikes[displayedNews[0].id] ?: 0,
-                        onLike = { viewModel.incrementLikes(displayedNews[0].id) },
-                        modifier = Modifier.weight(1f)
-                    )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    if (displayedNews.size > 0) {
+                        NewsQuarter(
+                            news = displayedNews[0],
+                            likes = newsLikes[displayedNews[0].id] ?: 0,
+                            onLike = { viewModel.incrementLikes(displayedNews[0].id) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    if (displayedNews.size > 1) {
+                        NewsQuarter(
+                            news = displayedNews[1],
+                            likes = newsLikes[displayedNews[1].id] ?: 0,
+                            onLike = { viewModel.incrementLikes(displayedNews[1].id) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
-                if (displayedNews.size > 1) {
-                    NewsQuarter(
-                        news = displayedNews[1],
-                        likes = newsLikes[displayedNews[1].id] ?: 0,
-                        onLike = { viewModel.incrementLikes(displayedNews[1].id) },
-                        modifier = Modifier.weight(1f)
-                    )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    if (displayedNews.size > 2) {
+                        NewsQuarter(
+                            news = displayedNews[2],
+                            likes = newsLikes[displayedNews[2].id] ?: 0,
+                            onLike = { viewModel.incrementLikes(displayedNews[2].id) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    if (displayedNews.size > 3) {
+                        NewsQuarter(
+                            news = displayedNews[3],
+                            likes = newsLikes[displayedNews[3].id] ?: 0,
+                            onLike = { viewModel.incrementLikes(displayedNews[3].id) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
             }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    .height(56.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                if (displayedNews.size > 2) {
-                    NewsQuarter(
-                        news = displayedNews[2],
-                        likes = newsLikes[displayedNews[2].id] ?: 0,
-                        onLike = { viewModel.incrementLikes(displayedNews[2].id) },
-                        modifier = Modifier.weight(1f)
+                Button(
+                    onClick = { // TODO
+                        },
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .padding(horizontal = 4.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Navy)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Влево",
+                        tint = LightBlue
                     )
                 }
-                if (displayedNews.size > 3) {
-                    NewsQuarter(
-                        news = displayedNews[3],
-                        likes = newsLikes[displayedNews[3].id] ?: 0,
-                        onLike = { viewModel.incrementLikes(displayedNews[3].id) },
-                        modifier = Modifier.weight(1f)
+
+                Button(
+                    onClick = { // TODO
+                              },
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .padding(horizontal = 4.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Navy)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "Информация",
+                        tint = AccentBlue
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Text("Инфо", color = StarWhite)
+                }
+
+                Button(
+                    onClick = {
+                        // TODO
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .padding(horizontal = 4.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Navy)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowForward,
+                        contentDescription = "Вправо",
+                        tint = LightBlue
                     )
                 }
-            }
-        }
-
-        // Панель навигации (3 кнопки)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Button(
-                onClick = { /* Назад */ },
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .padding(horizontal = 4.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Navy)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Влево",
-                    tint = LightBlue
-                )
-            }
-
-            Button(
-                onClick = { /* Информация */ },
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .padding(horizontal = 4.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Navy)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = "Информация",
-                    tint = AccentBlue
-                )
-                Spacer(modifier = Modifier.width(3.dp))
-                Text("Инфо", color = StarWhite)
-            }
-
-            Button(
-                onClick = { /* Вперёд */ },
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .padding(horizontal = 4.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Navy)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowForward,
-                    contentDescription = "Вправо",
-                    tint = LightBlue
-                )
             }
         }
     }
@@ -155,7 +167,7 @@ fun NewsQuarter(
         modifier = modifier
             .fillMaxHeight()
             .border(2.dp, LightBlue.copy(alpha = 0.3f), MaterialTheme.shapes.medium),
-        colors = CardDefaults.cardColors(containerColor = Navy),
+        colors = CardDefaults.cardColors(containerColor = Navy.copy(alpha = 0.7f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -202,3 +214,5 @@ fun NewsQuarter(
         }
     }
 }
+
+
