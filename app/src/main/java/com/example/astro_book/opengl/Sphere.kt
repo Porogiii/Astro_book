@@ -52,7 +52,6 @@ class Sphere(
         val indices = mutableListOf<Short>()
         val texCoords = mutableListOf<Float>()
 
-        // Генерация вершин сферы с текстурными координатами
         for (i in 0..stacks) {
             val stackAngle = PI / 2 - i * PI / stacks
             val xy = radius * cos(stackAngle)
@@ -67,7 +66,6 @@ class Sphere(
                 vertices.add(y.toFloat())
                 vertices.add(z.toFloat())
 
-                // Текстурные координаты
                 val s = j.toFloat() / slices
                 val t = i.toFloat() / stacks
                 texCoords.add(s)
@@ -77,7 +75,6 @@ class Sphere(
 
         vertexCount = vertices.size / 3
 
-        // Генерация индексов
         for (i in 0 until stacks) {
             var k1 = i * (slices + 1)
             var k2 = k1 + slices + 1

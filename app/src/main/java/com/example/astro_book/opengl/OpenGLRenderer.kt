@@ -22,7 +22,7 @@ class OpenGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
         GLES20.glEnable(GLES20.GL_DEPTH_TEST)
 
         square = Square(context)
-        solarSystem = SolarSystem(context) // Передаем context
+        solarSystem = SolarSystem(context)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -41,7 +41,7 @@ class OpenGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         solarSystem.update(deltaTime)
 
-        // Рисуем квадрат-фон
+        // квадрат-фон
         Matrix.setLookAtM(viewMatrix, 0, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
         Matrix.multiplyMM(mvpMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
 
@@ -54,7 +54,7 @@ class OpenGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
         Matrix.multiplyMM(squareMVP, 0, mvpMatrix, 0, squareMatrix, 0)
         square.draw(squareMVP)
 
-        // Рисуем солнечную систему
+        // солнечная система
         Matrix.setLookAtM(
             viewMatrix, 0,
             0f, 2.5f, 6f,

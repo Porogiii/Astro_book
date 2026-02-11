@@ -21,7 +21,7 @@ class SolarSystem(private val context: Context) {
     // Луна
     private val moon = Sphere(0.03f)
 
-    // Углы вращения
+    // Углы
     private var mercuryAngle = 0f
     private var venusAngle = 45f
     private var earthAngle = 90f
@@ -32,7 +32,7 @@ class SolarSystem(private val context: Context) {
     private var neptuneAngle = 315f
     private var moonAngle = 0f
 
-    // Скорости вращения
+    // Скорость
     private val mercurySpeed = 2.0f
     private val venusSpeed = 1.5f
     private val earthSpeed = 1.0f
@@ -43,7 +43,7 @@ class SolarSystem(private val context: Context) {
     private val neptuneSpeed = 0.2f
     private val moonSpeed = 5.0f
 
-    // Орбитальные радиусы
+    // радиусы
     private val mercuryOrbit = 0.5f
     private val venusOrbit = 0.8f
     private val earthOrbit = 1.1f
@@ -55,7 +55,7 @@ class SolarSystem(private val context: Context) {
     private val moonOrbit = 0.18f
 
     init {
-        // Загружаем текстуры для всех небесных тел
+        // текстуры
         sun.loadTexture(context, R.drawable.sun)
         mercury.loadTexture(context, R.drawable.mercury)
         venus.loadTexture(context, R.drawable.venus)
@@ -91,18 +91,18 @@ class SolarSystem(private val context: Context) {
     }
 
     fun draw(mvpMatrix: FloatArray) {
-        // Рисуем Солнце
+        // Солнце
         val sunMatrix = FloatArray(16)
         Matrix.setIdentityM(sunMatrix, 0)
         val sunMVP = FloatArray(16)
         Matrix.multiplyMM(sunMVP, 0, mvpMatrix, 0, sunMatrix, 0)
         sun.draw(sunMVP)
 
-        // Рисуем планеты
+        // планеты
         drawPlanet(mercury, mercuryOrbit, mercuryAngle, mvpMatrix)
         drawPlanet(venus, venusOrbit, venusAngle, mvpMatrix)
 
-        // Земля с Луной
+        // Земля
         val earthX = earthOrbit * Math.cos(Math.toRadians(earthAngle.toDouble())).toFloat()
         val earthZ = earthOrbit * Math.sin(Math.toRadians(earthAngle.toDouble())).toFloat()
         drawPlanet(earth, earthOrbit, earthAngle, mvpMatrix)

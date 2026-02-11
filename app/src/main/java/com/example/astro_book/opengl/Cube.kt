@@ -65,32 +65,32 @@ class Cube {
     )
 
     private val colors = floatArrayOf(
-        // Front (красный)
+        // Front
         1f, 0f, 0f, 1f,
         1f, 0f, 0f, 1f,
         1f, 0f, 0f, 1f,
         1f, 0f, 0f, 1f,
-        // Back (зеленый)
+        // Back
         0f, 1f, 0f, 1f,
         0f, 1f, 0f, 1f,
         0f, 1f, 0f, 1f,
         0f, 1f, 0f, 1f,
-        // Top (синий)
+        // Top
         0f, 0f, 1f, 1f,
         0f, 0f, 1f, 1f,
         0f, 0f, 1f, 1f,
         0f, 0f, 1f, 1f,
-        // Bottom (желтый)
+        // Bottom
         1f, 1f, 0f, 1f,
         1f, 1f, 0f, 1f,
         1f, 1f, 0f, 1f,
         1f, 1f, 0f, 1f,
-        // Right (cyan)
+        // Right
         0f, 1f, 1f, 1f,
         0f, 1f, 1f, 1f,
         0f, 1f, 1f, 1f,
         0f, 1f, 1f, 1f,
-        // Left (magenta)
+        // Left
         1f, 0f, 1f, 1f,
         1f, 0f, 1f, 1f,
         1f, 0f, 1f, 1f,
@@ -98,12 +98,12 @@ class Cube {
     )
 
     private val drawOrder = shortArrayOf(
-        0, 1, 2, 0, 2, 3,    // Front
-        4, 6, 5, 4, 7, 6,    // Back
-        8, 9, 10, 8, 10, 11, // Top
-        12, 14, 13, 12, 15, 14, // Bottom
-        16, 17, 18, 16, 18, 19, // Right
-        20, 22, 21, 20, 23, 22  // Left
+        0, 1, 2, 0, 2, 3,
+        4, 6, 5, 4, 7, 6,
+        8, 9, 10, 8, 10, 11,
+        12, 14, 13, 12, 15, 14,
+        16, 17, 18, 16, 18, 19,
+        20, 22, 21, 20, 23, 22
     )
 
     init {
