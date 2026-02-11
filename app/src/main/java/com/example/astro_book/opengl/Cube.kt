@@ -65,32 +65,32 @@ class Cube {
     )
 
     private val colors = floatArrayOf(
-        // Front (красный)
+        // Front
         1f, 0f, 0f, 1f,
         1f, 0f, 0f, 1f,
         1f, 0f, 0f, 1f,
         1f, 0f, 0f, 1f,
-        // Back (зеленый)
+        // Back
         0f, 1f, 0f, 1f,
         0f, 1f, 0f, 1f,
         0f, 1f, 0f, 1f,
         0f, 1f, 0f, 1f,
-        // Top (синий)
+        // Top
         0f, 0f, 1f, 1f,
         0f, 0f, 1f, 1f,
         0f, 0f, 1f, 1f,
         0f, 0f, 1f, 1f,
-        // Bottom (желтый)
+        // Bottom
         1f, 1f, 0f, 1f,
         1f, 1f, 0f, 1f,
         1f, 1f, 0f, 1f,
         1f, 1f, 0f, 1f,
-        // Right (cyan)
+        // Right
         0f, 1f, 1f, 1f,
         0f, 1f, 1f, 1f,
         0f, 1f, 1f, 1f,
         0f, 1f, 1f, 1f,
-        // Left (magenta)
+        // Left
         1f, 0f, 1f, 1f,
         1f, 0f, 1f, 1f,
         1f, 0f, 1f, 1f,
