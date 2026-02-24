@@ -27,7 +27,7 @@ class Cube {
         varying vec4 vColor;
         
         void main() {
-            gl_FragColor = vColor;
+            gl_FragColor = vec4(0.0, 1.0, 0.0, 0.3);
         }
     """.trimIndent()
 
@@ -64,44 +64,20 @@ class Cube {
         -0.5f, -0.5f, -0.5f
     )
 
-    private val colors = floatArrayOf(
-        // Front
-        1f, 0f, 0f, 1f,
-        1f, 0f, 0f, 1f,
-        1f, 0f, 0f, 1f,
-        1f, 0f, 0f, 1f,
-        // Back
-        0f, 1f, 0f, 1f,
-        0f, 1f, 0f, 1f,
-        0f, 1f, 0f, 1f,
-        0f, 1f, 0f, 1f,
-        // Top
-        0f, 0f, 1f, 1f,
-        0f, 0f, 1f, 1f,
-        0f, 0f, 1f, 1f,
-        0f, 0f, 1f, 1f,
-        // Bottom
-        1f, 1f, 0f, 1f,
-        1f, 1f, 0f, 1f,
-        1f, 1f, 0f, 1f,
-        1f, 1f, 0f, 1f,
-        // Right
-        0f, 1f, 1f, 1f,
-        0f, 1f, 1f, 1f,
-        0f, 1f, 1f, 1f,
-        0f, 1f, 1f, 1f,
-        // Left
-        1f, 0f, 1f, 1f,
-        1f, 0f, 1f, 1f,
-        1f, 0f, 1f, 1f,
-        1f, 0f, 1f, 1f
-    )
+    private val colors = FloatArray(96) { i ->
+        when (i % 4) {
+            0 -> 0.0f
+            1 -> 1.0f
+            2 -> 0.0f
+            else -> 0.4f
+        }
+    }
 
     private val drawOrder = shortArrayOf(
         0, 1, 2, 0, 2, 3,
-        4, 6, 5, 4, 7, 6,
-        8, 9, 10, 8, 10, 11,
-        12, 14, 13, 12, 15, 14,
+        4, 5, 6, 4, 6, 7,
+        8, 10, 9, 8, 11, 10,
+        12, 13, 14, 12, 14, 15,
         16, 17, 18, 16, 18, 19,
         20, 22, 21, 20, 23, 22
     )
@@ -127,6 +103,9 @@ class Cube {
     }
 
     fun draw(mvpMatrix: FloatArray) {
+        GLES20.glEnable(GLES20.GL_BLEND)
+        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA)
+
         GLES20.glUseProgram(program)
 
         val positionHandle = GLES20.glGetAttribLocation(program, "vPosition")
@@ -140,13 +119,19 @@ class Cube {
         val mvpMatrixHandle = GLES20.glGetUniformLocation(program, "uMVPMatrix")
         GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, mvpMatrix, 0)
 
-        for (i in drawOrder.indices step 3) {
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, drawOrder[i].toInt(), 3)
-        }
+        val indexBuffer = ByteBuffer.allocateDirect(drawOrder.size * 2)
+            .order(ByteOrder.nativeOrder())
+            .asShortBuffer()
+            .put(drawOrder)
+            .apply { position(0) }
+
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.size, GLES20.GL_UNSIGNED_SHORT, indexBuffer)
 
         GLES20.glDisableVertexAttribArray(positionHandle)
         GLES20.glDisableVertexAttribArray(colorHandle)
+        GLES20.glDisable(GLES20.GL_BLEND)
     }
+
 
     private fun createProgram(vertexCode: String, fragmentCode: String): Int {
         val vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexCode)

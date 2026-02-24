@@ -12,6 +12,9 @@ import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,11 +28,12 @@ import com.example.astro_book.viewmodel.NewsViewModel
 fun NewsScreen(viewModel: NewsViewModel = viewModel()) {
     val displayedNews by viewModel.displayedNews
     val newsLikes by viewModel.newsLikes
+    var glView by remember { mutableStateOf<OpenGLView?>(null) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
             factory = { context ->
-                OpenGLView(context)
+                OpenGLView(context).also { glView = it }
             },
             modifier = Modifier.fillMaxSize()
         )
@@ -102,8 +106,9 @@ fun NewsScreen(viewModel: NewsViewModel = viewModel()) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
-                    onClick = { // TODO
-                        },
+                    onClick = {
+                        glView?.renderer?.selectPrevPlanet()
+                    },
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
@@ -118,8 +123,9 @@ fun NewsScreen(viewModel: NewsViewModel = viewModel()) {
                 }
 
                 Button(
-                    onClick = { // TODO
-                              },
+                    onClick = {
+                        // TODO
+                    },
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
@@ -137,7 +143,7 @@ fun NewsScreen(viewModel: NewsViewModel = viewModel()) {
 
                 Button(
                     onClick = {
-                        // TODO
+                        glView?.renderer?.selectNextPlanet()
                     },
                     modifier = Modifier
                         .weight(1f)

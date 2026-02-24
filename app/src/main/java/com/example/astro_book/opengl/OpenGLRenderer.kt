@@ -10,6 +10,7 @@ import javax.microedition.khronos.opengles.GL10
 class OpenGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private lateinit var square: Square
     private lateinit var solarSystem: SolarSystem
+    private lateinit var selectionCube: Cube
 
     private val projectionMatrix = FloatArray(16)
     private val viewMatrix = FloatArray(16)
@@ -23,6 +24,7 @@ class OpenGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         square = Square(context)
         solarSystem = SolarSystem(context)
+        selectionCube = Cube()
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -64,5 +66,10 @@ class OpenGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
         Matrix.multiplyMM(mvpMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
 
         solarSystem.draw(mvpMatrix)
+
+        solarSystem.drawSelectionCube(mvpMatrix, selectionCube)
     }
+
+    fun selectNextPlanet() = solarSystem.selectNextPlanet()
+    fun selectPrevPlanet() = solarSystem.selectPrevPlanet()
 }

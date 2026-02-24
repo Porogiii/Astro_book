@@ -4,7 +4,7 @@ import android.content.Context
 import android.opengl.GLSurfaceView
 
 class OpenGLView(context: Context) : GLSurfaceView(context) {
-    private val renderer: OpenGLRenderer
+    val renderer: OpenGLRenderer
 
     init {
         setEGLContextClientVersion(2)

@@ -3,6 +3,9 @@ package com.example.astro_book.opengl
 import android.content.Context
 import android.opengl.Matrix
 import com.example.astro_book.R
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
 class SolarSystem(private val context: Context) {
     // Солнце
@@ -53,6 +56,12 @@ class SolarSystem(private val context: Context) {
     private val uranusOrbit = 2.7f
     private val neptuneOrbit = 3.1f
     private val moonOrbit = 0.18f
+
+    private var selectedPlanetIndex = 0
+    private val planets = listOf(mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, moon)
+    private val planetOrbits = listOf(mercuryOrbit, venusOrbit, earthOrbit, marsOrbit, jupiterOrbit, saturnOrbit, uranusOrbit, neptuneOrbit, moonOrbit)
+    private val planetRadii = listOf(0.06f, 0.10f, 0.11f, 0.08f, 0.25f, 0.22f, 0.15f, 0.14f, 0.03f)
+    private val planetNames = listOf("Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Moon")
 
     init {
         // текстуры
@@ -141,5 +150,49 @@ class SolarSystem(private val context: Context) {
         val planetMVP = FloatArray(16)
         Matrix.multiplyMM(planetMVP, 0, mvpMatrix, 0, planetMatrix, 0)
         planet.draw(planetMVP)
+    }
+
+    fun selectNextPlanet() {
+        selectedPlanetIndex = (selectedPlanetIndex + 1) % 9
+    }
+    fun selectPrevPlanet() {
+        selectedPlanetIndex = (selectedPlanetIndex - 1 + 9) % 9
+    }
+
+    private fun getPlanetAngle(index: Int): Float = when(index) {
+        0 -> mercuryAngle; 1 -> venusAngle; 2 -> earthAngle; 3 -> marsAngle
+        4 -> jupiterAngle; 5 -> saturnAngle; 6 -> uranusAngle; 7 -> neptuneAngle
+        8 -> moonAngle
+        else -> 0f
+    }
+
+    fun drawSelectionCube(mvpMatrix: FloatArray, cube: Cube) {
+        val planetRadius = planetRadii[selectedPlanetIndex]
+        val cubeSize = planetRadius * 2.2f
+
+        val cubeMatrix = FloatArray(16)
+        Matrix.setIdentityM(cubeMatrix, 0)
+
+        if (selectedPlanetIndex == 8) {
+            val earthX = earthOrbit * cos(earthAngle * PI / 180.0).toFloat()
+            val earthZ = earthOrbit * sin(earthAngle * PI / 180.0).toFloat()
+            val moonX = earthX + moonOrbit * cos(Math.toRadians((-moonAngle).toDouble())).toFloat()
+            val moonZ = earthZ + moonOrbit * sin(Math.toRadians((-moonAngle).toDouble())).toFloat()
+
+            Matrix.translateM(cubeMatrix, 0, moonX, 0f, moonZ)
+        } else {
+            val orbit = planetOrbits[selectedPlanetIndex]
+            val angle = getPlanetAngle(selectedPlanetIndex)
+            val x = orbit * cos(angle * PI / 180.0).toFloat()
+            val z = orbit * sin(angle * PI / 180.0).toFloat()
+            Matrix.translateM(cubeMatrix, 0, x, 0f, z)
+        }
+
+        Matrix.scaleM(cubeMatrix, 0, cubeSize, cubeSize, cubeSize)
+        Matrix.rotateM(cubeMatrix, 0, System.currentTimeMillis() * 0.001f, 1f, 1f, 0.3f)
+
+        val cubeMVP = FloatArray(16)
+        Matrix.multiplyMM(cubeMVP, 0, mvpMatrix, 0, cubeMatrix, 0)
+        cube.draw(cubeMVP)
     }
 }
