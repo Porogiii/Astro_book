@@ -69,7 +69,7 @@ class Cube {
             0 -> 0.0f
             1 -> 1.0f
             2 -> 0.0f
-            else -> 0.4f
+            else -> 0.3f
         }
     }
 

@@ -120,8 +120,9 @@ class SolarSystem(private val context: Context) {
         val moonMatrix = FloatArray(16)
         Matrix.setIdentityM(moonMatrix, 0)
         Matrix.translateM(moonMatrix, 0, earthX, 0f, earthZ)
-        Matrix.rotateM(moonMatrix, 0, moonAngle, 0f, 1f, 0f)
-        Matrix.translateM(moonMatrix, 0, moonOrbit, 0f, 0f)
+        val moonY = moonOrbit * cos(Math.toRadians(moonAngle.toDouble())).toFloat()
+        val moonZ = moonOrbit * sin(Math.toRadians(moonAngle.toDouble())).toFloat()
+        Matrix.translateM(moonMatrix, 0, 0f, moonY, moonZ)
         val moonMVP = FloatArray(16)
         Matrix.multiplyMM(moonMVP, 0, mvpMatrix, 0, moonMatrix, 0)
         moon.draw(moonMVP)
@@ -176,10 +177,10 @@ class SolarSystem(private val context: Context) {
         if (selectedPlanetIndex == 8) {
             val earthX = earthOrbit * cos(earthAngle * PI / 180.0).toFloat()
             val earthZ = earthOrbit * sin(earthAngle * PI / 180.0).toFloat()
-            val moonX = earthX + moonOrbit * cos(Math.toRadians((-moonAngle).toDouble())).toFloat()
-            val moonZ = earthZ + moonOrbit * sin(Math.toRadians((-moonAngle).toDouble())).toFloat()
+            val moonY = moonOrbit * cos(Math.toRadians(moonAngle.toDouble())).toFloat()
+            val moonZ = moonOrbit * sin(Math.toRadians(moonAngle.toDouble())).toFloat()
 
-            Matrix.translateM(cubeMatrix, 0, moonX, 0f, moonZ)
+            Matrix.translateM(cubeMatrix, 0, earthX, moonY, earthZ + moonZ)
         } else {
             val orbit = planetOrbits[selectedPlanetIndex]
             val angle = getPlanetAngle(selectedPlanetIndex)

@@ -57,20 +57,20 @@ fun NewsScreen(viewModel: NewsViewModel = viewModel()) {
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     if (displayedNews.size > 0) {
-                        NewsQuarter(
+                        /*NewsQuarter(
                             news = displayedNews[0],
                             likes = newsLikes[displayedNews[0].id] ?: 0,
                             onLike = { viewModel.incrementLikes(displayedNews[0].id) },
                             modifier = Modifier.weight(1f)
-                        )
+                        )*/
                     }
                     if (displayedNews.size > 1) {
-                        NewsQuarter(
+                        /*NewsQuarter(
                             news = displayedNews[1],
                             likes = newsLikes[displayedNews[1].id] ?: 0,
                             onLike = { viewModel.incrementLikes(displayedNews[1].id) },
                             modifier = Modifier.weight(1f)
-                        )
+                        )*/
                     }
                 }
                 Row(
@@ -80,20 +80,20 @@ fun NewsScreen(viewModel: NewsViewModel = viewModel()) {
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     if (displayedNews.size > 2) {
-                        NewsQuarter(
+                        /*NewsQuarter(
                             news = displayedNews[2],
                             likes = newsLikes[displayedNews[2].id] ?: 0,
                             onLike = { viewModel.incrementLikes(displayedNews[2].id) },
                             modifier = Modifier.weight(1f)
-                        )
+                        )*/
                     }
                     if (displayedNews.size > 3) {
-                        NewsQuarter(
+                        /*NewsQuarter(
                             news = displayedNews[3],
                             likes = newsLikes[displayedNews[3].id] ?: 0,
                             onLike = { viewModel.incrementLikes(displayedNews[3].id) },
                             modifier = Modifier.weight(1f)
-                        )
+                        )*/
                     }
                 }
             }
@@ -162,7 +162,7 @@ fun NewsScreen(viewModel: NewsViewModel = viewModel()) {
     }
 }
 
-@Composable
+/*@Composable
 fun NewsQuarter(
     news: NewsViewModel.NewsItem,
     likes: Int,
@@ -219,6 +219,6 @@ fun NewsQuarter(
             }
         }
     }
-}
+}*/
 
 
