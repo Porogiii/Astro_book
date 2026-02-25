@@ -22,8 +22,10 @@ class NewsViewModel : ViewModel() {
                 delay(5000)
                 val currentNews = _displayedNews.value.toMutableList()
                 val indexToReplace = Random.nextInt(4)
-                val newNews = allNews.random()
-                currentNews[indexToReplace] = newNews
+                var newNews = allNews.random()
+                if (newNews !in currentNews)
+                    currentNews[indexToReplace] = newNews
+                else newNews = allNews.random()
                 _displayedNews.value = currentNews
             }
         }

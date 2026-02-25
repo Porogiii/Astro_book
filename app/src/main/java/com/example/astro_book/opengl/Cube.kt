@@ -97,6 +97,7 @@ class Cube {
         1f, 0f, 1f, 1f
     )
 
+
     private val drawOrder = shortArrayOf(
         0, 1, 2, 0, 2, 3,    // Front
         4, 6, 5, 4, 7, 6,    // Back
@@ -140,9 +141,20 @@ class Cube {
         val mvpMatrixHandle = GLES20.glGetUniformLocation(program, "uMVPMatrix")
         GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, mvpMatrix, 0)
 
-        for (i in drawOrder.indices step 3) {
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, drawOrder[i].toInt(), 3)
+        val indexBuffer = ByteBuffer.allocateDirect(drawOrder.size * 2).run {
+            order(ByteOrder.nativeOrder())
+            asShortBuffer().apply {
+                drawOrder.forEach { put(it) }
+                position(0)
+            }
         }
+
+        GLES20.glDrawElements(
+            GLES20.GL_TRIANGLES,
+            drawOrder.size,
+            GLES20.GL_UNSIGNED_SHORT,
+            indexBuffer
+        )
 
         GLES20.glDisableVertexAttribArray(positionHandle)
         GLES20.glDisableVertexAttribArray(colorHandle)
