@@ -26,6 +26,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.astro_book.opengl.MoonRenderer
+import com.example.astro_book.opengl.NeptuneRenderer
 import com.example.astro_book.opengl.OpenGLView
 import com.example.astro_book.ui.theme.*
 import com.example.astro_book.viewmodel.NewsViewModel
@@ -174,16 +175,32 @@ fun PlanetInfoDialog(info: PlanetInfo, onDismiss: () -> Unit) {
                         .align(Alignment.CenterHorizontally)
                 )
 
-                Image(
-                    painter = painterResource(id = info.imageRes),
-                    contentDescription = info.name,
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-
+                if (info.name == "Neptune") {
+                    AndroidView(
+                        factory = { context ->
+                            GLSurfaceView(context).apply {
+                                setEGLContextClientVersion(2)
+                                setRenderer(NeptuneRenderer(context))
+                                renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(180.dp)
+                            .padding(horizontal = 8.dp, vertical = 8.dp)
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(id = info.imageRes),
+                        contentDescription = info.name,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(180.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                }
+                
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -212,6 +229,7 @@ fun PlanetInfoDialog(info: PlanetInfo, onDismiss: () -> Unit) {
         }
     }
 }
+
 
 @Composable
 fun MoonInfoDialog(onDismiss: () -> Unit) {
