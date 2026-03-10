@@ -158,6 +158,7 @@ class SolarSystem(private val context: Context) {
     fun selectPrevPlanet() {
         selectedPlanetIndex = (selectedPlanetIndex - 1 + 9) % 9
     }
+    fun getSelectedPlanetName(): String = planetNames[selectedPlanetIndex]
 
     private fun getPlanetAngle(index: Int): Float = when(index) {
         0 -> mercuryAngle; 1 -> venusAngle; 2 -> earthAngle; 3 -> marsAngle

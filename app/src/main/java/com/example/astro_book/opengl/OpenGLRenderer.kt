@@ -72,4 +72,5 @@ class OpenGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     fun selectNextPlanet() = solarSystem.selectNextPlanet()
     fun selectPrevPlanet() = solarSystem.selectPrevPlanet()
+    fun getSelectedPlanetName(): String = solarSystem.getSelectedPlanetName()
 }

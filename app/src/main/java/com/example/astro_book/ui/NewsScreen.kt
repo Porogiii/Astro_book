@@ -1,25 +1,26 @@
 package com.example.astro_book.ui
 
-import androidx.compose.foundation.background
+import android.opengl.GLSurfaceView
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.astro_book.opengl.MoonRenderer
 import com.example.astro_book.opengl.OpenGLView
 import com.example.astro_book.ui.theme.*
 import com.example.astro_book.viewmodel.NewsViewModel
@@ -29,6 +30,7 @@ fun NewsScreen(viewModel: NewsViewModel = viewModel()) {
     val displayedNews by viewModel.displayedNews
     val newsLikes by viewModel.newsLikes
     var glView by remember { mutableStateOf<OpenGLView?>(null) }
+    var showMoonDialog by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
@@ -106,9 +108,7 @@ fun NewsScreen(viewModel: NewsViewModel = viewModel()) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
-                    onClick = {
-                        glView?.renderer?.selectPrevPlanet()
-                    },
+                    onClick = { glView?.renderer?.selectPrevPlanet() },
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
@@ -124,7 +124,10 @@ fun NewsScreen(viewModel: NewsViewModel = viewModel()) {
 
                 Button(
                     onClick = {
-                        // TODO
+                        val name = glView?.renderer?.getSelectedPlanetName()
+                        if (name == "Moon") {
+                            showMoonDialog = true
+                        }
                     },
                     modifier = Modifier
                         .weight(1f)
@@ -142,9 +145,7 @@ fun NewsScreen(viewModel: NewsViewModel = viewModel()) {
                 }
 
                 Button(
-                    onClick = {
-                        glView?.renderer?.selectNextPlanet()
-                    },
+                    onClick = { glView?.renderer?.selectNextPlanet() },
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
@@ -156,6 +157,58 @@ fun NewsScreen(viewModel: NewsViewModel = viewModel()) {
                         contentDescription = "Вправо",
                         tint = LightBlue
                     )
+                }
+            }
+        }
+
+        if (showMoonDialog) {
+            MoonInfoDialog(onDismiss = { showMoonDialog = false })
+        }
+    }
+}
+
+@Composable
+fun MoonInfoDialog(onDismiss: () -> Unit) {
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.65f),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF0D1B2A))
+        ) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                Text(
+                    text = "Луна",
+                    color = StarWhite,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+
+                AndroidView(
+                    factory = { context ->
+                        GLSurfaceView(context).apply {
+                            setEGLContextClientVersion(2)
+                            setRenderer(MoonRenderer(context))
+                            renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
+                        }
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                )
+
+                Button(
+                    onClick = onDismiss,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Navy)
+                ) {
+                    Text("Закрыть", color = StarWhite)
                 }
             }
         }
@@ -220,5 +273,3 @@ fun NewsQuarter(
         }
     }
 }
-
-
