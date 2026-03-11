@@ -8,24 +8,27 @@ import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 class NeptuneRenderer(private val context: Context) : GLSurfaceView.Renderer {
-    private lateinit var waterSurface: WaterSurface
+    private lateinit var neptuneSphere: NeptuneSphere
 
     private val projectionMatrix = FloatArray(16)
     private val viewMatrix = FloatArray(16)
     private val mvpMatrix = FloatArray(16)
+    private val modelMatrix = FloatArray(16)
 
+    private var rotationAngle = 0f
+    private var time = 0f
     private var lastTime = System.currentTimeMillis()
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        GLES20.glClearColor(0.01f, 0.04f, 0.15f, 1.0f)
+        GLES20.glClearColor(0.02f, 0.02f, 0.08f, 1.0f)
         GLES20.glEnable(GLES20.GL_DEPTH_TEST)
-        waterSurface = WaterSurface()
+        neptuneSphere = NeptuneSphere(context)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         GLES20.glViewport(0, 0, width, height)
         val ratio = width.toFloat() / height.toFloat()
-        Matrix.perspectiveM(projectionMatrix, 0, 50f, ratio, 0.1f, 100f)
+        Matrix.perspectiveM(projectionMatrix, 0, 45f, ratio, 0.1f, 100f)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -35,15 +38,17 @@ class NeptuneRenderer(private val context: Context) : GLSurfaceView.Renderer {
         val deltaTime = (currentTime - lastTime) / 1000f
         lastTime = currentTime
 
-        waterSurface.update(deltaTime)
+        rotationAngle += 0.3f
+        time += deltaTime
 
-        Matrix.setLookAtM(viewMatrix, 0,
-            0f, -1.8f, 0.9f,
-            0f,  0.0f, 0.0f,
-            0f,  0.0f, 1.0f
-        )
+        Matrix.setLookAtM(viewMatrix, 0, 0f, 0f, 3f, 0f, 0f, 0f, 0f, 1f, 0f)
+        Matrix.setIdentityM(modelMatrix, 0)
+//        Matrix.rotateM(modelMatrix, 0, rotationAngle, 0f, 1f, 0f)
+
+        val finalMVP = FloatArray(16)
         Matrix.multiplyMM(mvpMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
+        Matrix.multiplyMM(finalMVP, 0, mvpMatrix, 0, modelMatrix, 0)
 
-        waterSurface.draw(mvpMatrix)
+        neptuneSphere.draw(finalMVP, modelMatrix, time)
     }
 }
