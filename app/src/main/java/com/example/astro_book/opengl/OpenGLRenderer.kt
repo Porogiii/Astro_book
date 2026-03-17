@@ -4,6 +4,7 @@ import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
+import android.util.Log
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -11,10 +12,13 @@ class OpenGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private lateinit var square: Square
     private lateinit var solarSystem: SolarSystem
     private lateinit var selectionCube: Cube
+    private lateinit var blackHole: BlackHole
 
     private val projectionMatrix = FloatArray(16)
     private val viewMatrix = FloatArray(16)
     private val mvpMatrix = FloatArray(16)
+    private var blackHoleX = -5f
+    private var blackHoleY = 0f
 
     private var lastTime = System.currentTimeMillis()
 
@@ -25,11 +29,11 @@ class OpenGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
         square = Square(context)
         solarSystem = SolarSystem(context)
         selectionCube = Cube()
+        blackHole = BlackHole()
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         GLES20.glViewport(0, 0, width, height)
-
         val ratio: Float = width.toFloat() / height.toFloat()
         Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1f, 1f, 1f, 100f)
     }
@@ -46,26 +50,34 @@ class OpenGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
         // квадрат-фон
         Matrix.setLookAtM(viewMatrix, 0, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
         Matrix.multiplyMM(mvpMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
-
         val squareMatrix = FloatArray(16)
         Matrix.setIdentityM(squareMatrix, 0)
         Matrix.translateM(squareMatrix, 0, 0f, 0f, -15f)
         Matrix.scaleM(squareMatrix, 0, 12f, 12f, 1f)
-
         val squareMVP = FloatArray(16)
         Matrix.multiplyMM(squareMVP, 0, mvpMatrix, 0, squareMatrix, 0)
         square.draw(squareMVP)
 
         // солнечная система
-        Matrix.setLookAtM(
-            viewMatrix, 0,
-            0f, 2.5f, 6f,
-            0f, 0f, 0f,
-            0f, 1.0f, 0.0f
-        )
+        Matrix.setLookAtM(viewMatrix, 0, 0f, 2.5f, 6f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
         Matrix.multiplyMM(mvpMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
-
         solarSystem.draw(mvpMatrix)
+
+        blackHoleX += 0.2f * deltaTime
+        if (blackHoleX > 5f) {
+            blackHoleX = -5f
+            blackHoleY = (Math.random() * 4.0 - 2.0).toFloat()
+        }
+
+        val bhModel = FloatArray(16)
+        Matrix.setIdentityM(bhModel, 0)
+        Matrix.translateM(bhModel, 0, blackHoleX, blackHoleY, -3.5f)
+        Matrix.scaleM(bhModel, 0, 3.5f, 3.5f, 3.5f)
+        Matrix.rotateM(bhModel, 0, System.currentTimeMillis() * 0.01f, 0f, 0f, 1f)
+
+        val bhMVP = FloatArray(16)
+        Matrix.multiplyMM(bhMVP, 0, mvpMatrix, 0, bhModel, 0)
+        blackHole.draw(bhMVP)
 
         solarSystem.drawSelectionCube(mvpMatrix, selectionCube)
     }
